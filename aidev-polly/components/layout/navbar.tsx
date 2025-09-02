@@ -1,9 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth-context";
 
 export function Navbar() {
-  // This would normally check if user is authenticated
-  const isAuthenticated = false;
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <nav className="bg-white shadow-sm">
@@ -21,8 +27,15 @@ export function Navbar() {
             <Link href="/create-poll" passHref>
               <Button variant="ghost">Create Poll</Button>
             </Link>
-            {isAuthenticated ? (
-              <Button variant="outline">Sign Out</Button>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-700">
+                  {user.email}
+                </span>
+                <Button variant="outline" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </div>
             ) : (
               <Link href="/auth" passHref>
                 <Button>Sign In</Button>
